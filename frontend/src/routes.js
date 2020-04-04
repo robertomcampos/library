@@ -1,20 +1,45 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 
-import Logon from './pages/Logon';
+import Login from './pages/Login';
 import Register from './pages/Register';
-import Profile from './pages/Profile';
-import NewIncident from './pages/NewIncident';
+import Cart from './pages/Cart';
+import Landing from './pages/Landing';
+import Protocol from './pages/Protocol';
+import isAuthenticated from './services/isAuthenticated';
 
 export default function Routes() {
     return (
         <BrowserRouter>
             <Switch>
-                <Route path="/" exact component={Logon}></Route>
+                <Route path="/" exact component={Landing}></Route>
+                <Route path="/login" component={Login}></Route>
                 <Route path="/register" component={Register}></Route>
-                <Route path="/profile" component={Profile}></Route>
-                <Route path="/incidents/new" component={NewIncident}></Route>
+                <PrivateRoute>
+                    <Route path="/cart" component={Cart}></Route>
+                    <Route path="/protocol" component={Protocol}></Route>
+                </PrivateRoute>
             </Switch>
         </BrowserRouter>
+    );
+}
+
+function PrivateRoute({ children, ...props }) {
+    return (
+        <Route
+            {...props}
+            render={({ location }) =>
+                isAuthenticated() ? (
+                    children
+                ) : (
+                        <Redirect
+                            to={{
+                                pathname: "/login",
+                                state: { from: location }
+                            }}
+                        />
+                    )
+            }
+        />
     );
 }
