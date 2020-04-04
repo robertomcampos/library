@@ -1,53 +1,59 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
 import { FiShoppingCart } from 'react-icons/fi'
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import Header from '../Header';
 
 import api from '../../services/api'
-import { getStoredBooks, setStoredBooks } from '../../services/manageStoredBooks';
+import { setStoredBooks as setStoredBooksService, getStoredBooks } from '../../services/manageStoredBooks';
 
 import './styles.scss';
+import { getBooks } from '../../store/Books/actions';
 
 export default function Landing() {
 
-    const initialState = {
-        books: [],
-        categories: [],
-        storedBooks: [],
-        selectedCategory: 0,
-        loading: true,
-    }
-
-    const [state, setState] = useState(initialState);
+    const [categories, setCategories] = useState([]);
+    const [storedBooks, setStoredBooks] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState(0);
+    const [pageLoading, setPageLoading] = useState(true);
 
     const history = useHistory();
+
+    const dispatch = useDispatch();
+
+    const { data: books, loading } = useSelector(state => state.books);
 
     useEffect(() => {
         fetchData();
     }, [])
 
     function handleAddBook(book) {
-        let storedBooks;
-        if (!state.storedBooks.includes(book)) {
-            storedBooks = [...state.storedBooks, book];
-            setStoredBooks(storedBooks);
-            return setState({
-                ...state,
-                storedBooks,
-            });
+        let _storedBooks;
+        if (!storedBooks.includes(book)) {
+            _storedBooks = [...storedBooks, book];
+            setStoredBooksService(_storedBooks);
+            return setStoredBooks(_storedBooks);
         }
-        storedBooks = state.storedBooks.filter(x => x !== book)
-        setStoredBooks(storedBooks);
-        return setState({
-            ...state,
-            storedBooks,
-        });
+        _storedBooks = storedBooks.filter(x => x !== book)
+        setStoredBooksService(_storedBooks);
+        return setStoredBooks(_storedBooks);
     }
 
+    useEffect(() => {
+        if (books.length) {
+            api.get('categories').then(result => {
+                setCategories(result.data);
+                const storedBooks = getStoredBooks();
+                setStoredBooks(storedBooks || []);
+                setPageLoading(false);
+            });
+        }
+    }, [books]);
+
     async function fetchData() {
-        const books = await api.get('books');
-        const categories = await api.get('categories');
+        dispatch(getBooks());
+        /* const categories = await api.get('categories');
         const storedBooks = getStoredBooks();
 
         setState({
@@ -56,11 +62,11 @@ export default function Landing() {
             categories: categories.data,
             storedBooks: storedBooks || state.storedBooks,
             loading: false,
-        });
+        }); */
     }
 
     function handleReservation() {
-        if (state.storedBooks.length) {
+        if (storedBooks.length) {
             return history.push('/cart');
         }
 
@@ -72,21 +78,22 @@ export default function Landing() {
         const endpoint = categoryId === "0" ? '' : `categories/${categoryId}`;
 
         const books = await api.get(`books/${endpoint}`);
-        setState({
+        setSelectedCategory(categoryId);
+        /* setState({
             ...state,
             books: books.data,
             selectedCategory: categoryId,
-        });
+        }); */
     }
 
-    const isStored = bookId => state.storedBooks.find(x => x.id == bookId);
+    const isStored = bookId => storedBooks.find(x => x.id == bookId);
 
     function handleClear() {
         localStorage.removeItem('storedBooks');
-        setState({ ...state, storedBooks: [] });
+        setStoredBooks([]);
     }
 
-    if (state.loading)
+    if (pageLoading)
         return (<div></div>);
 
     return (
@@ -95,16 +102,16 @@ export default function Landing() {
             <h1>Escolha os livros para sua reserva</h1>
             <div className="filter">
                 <div className="custom-select">
-                    <select value={state.selectedCategory} onChange={handleChangeCategory}>
+                    <select value={selectedCategory} onChange={handleChangeCategory}>
                         <option value="0">Todos</option>
-                        {state.categories.map(x => (
+                        {categories.map(x => (
                             <option key={x.id} value={x.id}>{x.name}</option>
                         ))}
                     </select>
                 </div>
             </div>
             <ul>
-                {state.books.map(book => (
+                {books.map(book => (
                     <li key={book.id}>
                         <img src={`../../../images/books/thumbs/${book.thumbnail}`} alt={book.name} />
                         <div>
@@ -120,8 +127,8 @@ export default function Landing() {
                 ))}
             </ul>
             <div className="button-area">
-                <button disabled={!state.storedBooks.length} onClick={() => handleReservation()} type="button" className="primary btnSave">Reservar</button>
-                <button disabled={!state.storedBooks.length} onClick={() => handleClear()} type="button" className="secundary btnClear">Limpar</button>
+                <button disabled={!storedBooks.length} onClick={() => handleReservation()} type="button" className="primary btnSave">Reservar</button>
+                <button disabled={!storedBooks.length} onClick={() => handleClear()} type="button" className="secundary btnClear">Limpar</button>
             </div>
         </div >
     );

@@ -28,7 +28,7 @@ export default function Header(props) {
             {userName &&
                 <header>
                     <span>Olá, {userName}.</span>
-                    <button className="btnLogout" onClick={handleLogout} type="button">Log out</button>
+                    <button className="btnLogout" onClick={handleLogout} type="button">Sair</button>
                 </header>
             }
             {props.children}
