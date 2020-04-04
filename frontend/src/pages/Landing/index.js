@@ -5,6 +5,7 @@ import { Link, useHistory } from 'react-router-dom';
 import Header from '../Header';
 
 import api from '../../services/api'
+import { getStoredBooks, setStoredBooks } from '../../services/manageStoredBooks';
 
 import './styles.scss';
 
@@ -27,35 +28,39 @@ export default function Landing() {
     }, [])
 
     function handleAddBook(book) {
+        let storedBooks;
         if (!state.storedBooks.includes(book)) {
+            storedBooks = [...state.storedBooks, book];
+            setStoredBooks(storedBooks);
             return setState({
                 ...state,
-                storedBooks: [...state.storedBooks, book],
+                storedBooks,
             });
         }
+        storedBooks = state.storedBooks.filter(x => x !== book)
+        setStoredBooks(storedBooks);
         return setState({
             ...state,
-            storedBooks: state.storedBooks.filter(x => x !== book),
+            storedBooks,
         });
     }
 
     async function fetchData() {
         const books = await api.get('books');
         const categories = await api.get('categories');
-        const storedBooks = localStorage.getItem('storedBooks');
+        const storedBooks = getStoredBooks();
 
         setState({
             ...state,
             books: books.data,
             categories: categories.data,
-            storedBooks: storedBooks ? JSON.parse(storedBooks) : state.storedBooks,
+            storedBooks: storedBooks || state.storedBooks,
             loading: false,
         });
     }
 
     function handleReservation() {
         if (state.storedBooks.length) {
-            localStorage.setItem('storedBooks', JSON.stringify(state.storedBooks));
             return history.push('/cart');
         }
 
@@ -106,7 +111,7 @@ export default function Landing() {
                             <div className="title">Título: {book.name}</div>
                             <p><strong>Autor: </strong>{book.author}</p>
                             <p><strong>Gênero: </strong>{book.categoryName}</p>
-                            <button className={classNames({ stored: isStored(book.id) })} onClick={() => handleAddBook(book)} type="button">
+                            <button className={classNames('primary', { secundary: isStored(book.id) })} onClick={() => handleAddBook(book)} type="button">
                                 <FiShoppingCart size={16} color="#FFFFFF" />
                                 <span>{isStored(book.id) ? 'Remover' : 'Adicionar'}</span>
                             </button>
@@ -115,8 +120,8 @@ export default function Landing() {
                 ))}
             </ul>
             <div className="button-area">
-                <button disabled={!state.storedBooks.length} onClick={() => handleReservation()} type="button" className="btnSave">Reservar</button>
-                <button disabled={!state.storedBooks.length} onClick={() => handleClear()} type="button" className="btnClear">Limpar</button>
+                <button disabled={!state.storedBooks.length} onClick={() => handleReservation()} type="button" className="primary btnSave">Reservar</button>
+                <button disabled={!state.storedBooks.length} onClick={() => handleClear()} type="button" className="secundary btnClear">Limpar</button>
             </div>
         </div >
     );

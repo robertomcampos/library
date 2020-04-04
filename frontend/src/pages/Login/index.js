@@ -51,7 +51,7 @@ export default function Login() {
                         onChange={e => setState({ ...state, password: e.target.value })}
                     />
                     <div className="button-area">
-                        <button className="button" type="submit">Entrar</button>
+                        <button className="primary button" type="submit">Entrar</button>
                     </div>
                     <Link className="back-link" to="/register">
                         <FiLogIn size={16} color="#41414d" />

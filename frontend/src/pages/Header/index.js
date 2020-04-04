@@ -27,7 +27,7 @@ export default function Header(props) {
         <div className="header-container">
             {userName &&
                 <header>
-                    <span>Olá, {userName}</span>
+                    <span>Olá, {userName}.</span>
                     <button className="btnLogout" onClick={handleLogout} type="button">Log out</button>
                 </header>
             }

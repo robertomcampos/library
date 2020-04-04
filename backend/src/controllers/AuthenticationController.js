@@ -3,8 +3,6 @@ const connection = require('../database/connection');
 module.exports = {
     async authenticate(request, response) {
 
-        console.log('entrou');
-
         const { email, password } = request.body;
 
         const [user] = await connection('users')

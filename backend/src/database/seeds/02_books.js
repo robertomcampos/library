@@ -9,56 +9,56 @@ exports.seed = function (knex) {
           id: 1,
           name: 'O Senhor dos Anéis: A Sociedade do Anel',
           author: 'J.R.R.Tolkien',
-          thumbnail: 'lot1.png',
+          thumbnail: 'lot1.jpg',
           category_id: 3
         },
         {
           id: 2,
           name: 'O Senhor dos Anéis: As duas Torres',
           author: 'J.R.R.Tolkien',
-          thumbnail: 'lot2.png',
+          thumbnail: 'lot2.jpg',
           category_id: 3
         },
         {
           id: 3,
           name: 'O Senhor dos Anéis: O Retorno do Rei',
           author: 'J.R.R.Tolkien',
-          thumbnail: 'lot2.png',
+          thumbnail: 'lot3.jpg',
           category_id: 3
         },
         {
           id: 4,
           name: 'O Silmarillion',
           author: 'J.R.R.Tolkien',
-          thumbnail: 'silmarillion.png',
+          thumbnail: 'silmarillion.jpg',
           category_id: 3
         },
         {
           id: 5,
           name: 'O Hobbit',
           author: 'J.R.R.Tolkien',
-          thumbnail: 'hobbit.png',
+          thumbnail: 'hobbit.jpg',
           category_id: 3
         },
         {
           id: 6,
           name: 'O Alienista',
           author: 'Machado de Assis',
-          thumbnail: 'alienista.png',
+          thumbnail: 'alienista.jpg',
           category_id: 2
         },
         {
           id: 7,
           name: 'Ensaio sobre a cegueira',
           author: 'José Saramago',
-          thumbnail: 'cegueira.png',
+          thumbnail: 'cegueira.jpg',
           category_id: 4
         },
         {
           id: 8,
           name: 'A Batalha do Apocalipse',
           author: 'Eduardo Spohr',
-          thumbnail: 'apocalipse.png',
+          thumbnail: 'apocalipse.jpg',
           category_id: 1
         },
       ]);

@@ -3,6 +3,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi'
 
 import api from '../../services/api'
+
 import './styles.scss';
 
 export default function Register() {
@@ -42,10 +43,7 @@ export default function Register() {
                 <section>
                     <h1>Cadastro</h1>
                     <p>Faça seu cadastro, e aproveite nosso catálogo de livros.</p>
-                    <Link className="back-link" to="/login">
-                        <FiArrowLeft size={16} color="#41414d" />
-                        Já tenho cadastro
-                    </Link>
+                    
                 </section>
                 <form onSubmit={handleRegister}>
                     <input
@@ -57,12 +55,17 @@ export default function Register() {
                         onChange={e => setState({ ...state, email: e.target.value })} />
                     <input placeholder="Senha"
                         value={state.password}
+                        type="password"
                         onChange={e => setState({ ...state, password: e.target.value })} />
                     <div className="button-area">
-                        <button className="button" type="submit">
-                            Cadastrar
+                        <button className="primary button full" type="submit">
+                            Criar conta
                         </button>
                     </div>
+                    <Link className="back-link" to="/login">
+                        <FiArrowLeft size={16} color="#41414d" />
+                        Já tenho cadastro
+                    </Link>
                 </form>
             </div>
         </div>

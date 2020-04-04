@@ -13,19 +13,19 @@ module.exports = {
 
         const protocol = crypto.randomBytes(4).toString('HEX');
 
-        const [reservationId] = await connection('reservations')
-            .returning('id')
-            .insert({
-                startsOn: '2014-01-01T23:28:56.782Z',
-                endsOn: '2014-01-01T23:28:56.782Z',
-                user_id: user,
-                protocol,
-            });
+        const data = {
+            startsOn,
+            endsOn,
+            user_id: user,
+            protocol,
+        }
 
-        const booksToReserv = books.map(id => ({ book_id: id, reservation_id: reservationId }));
+        const [reservation_id] = await connection('reservations').insert(data);
+
+        const booksToReserv = books.map(id => ({ book_id: id, reservation_id: reservation_id }));
 
         await connection('reservations_books').insert(booksToReserv);
 
-        return response.json({ protocol });
+        return response.json({ ...data, id: reservation_id });
     }
 }
