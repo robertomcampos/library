@@ -1,3 +1,3 @@
 export default function getUser() {
-    return JSON.parse(localStorage.getItem('loggedUser'));
+    return localStorage.getItem('loggedUser') ? JSON.parse(localStorage.getItem('loggedUser')) : undefined;
 }

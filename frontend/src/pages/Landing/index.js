@@ -1,14 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { FiLogIn } from 'react-icons/fi'
+import classNames from 'classnames';
+import { FiShoppingCart } from 'react-icons/fi'
 import { Link, useHistory } from 'react-router-dom';
+import Header from '../Header';
 
 import api from '../../services/api'
 
 import './styles.scss';
 
 export default function Landing() {
-    const [books, setBooks] = useState([]);
-    const [storedBooks, setStoredBooks] = useState([]);
+
+    const initialState = {
+        books: [],
+        categories: [],
+        storedBooks: [],
+        selectedCategory: 0,
+        loading: true,
+    }
+
+    const [state, setState] = useState(initialState);
+
     const history = useHistory();
 
     useEffect(() => {
@@ -16,62 +27,97 @@ export default function Landing() {
     }, [])
 
     function handleAddBook(book) {
-        if (!storedBooks.includes(book)) {
-            return setStoredBooks([...storedBooks, book]);
+        if (!state.storedBooks.includes(book)) {
+            return setState({
+                ...state,
+                storedBooks: [...state.storedBooks, book],
+            });
         }
-        return setStoredBooks(storedBooks.filter(x => x !== book));
+        return setState({
+            ...state,
+            storedBooks: state.storedBooks.filter(x => x !== book),
+        });
     }
 
     async function fetchData() {
         const books = await api.get('books');
-        setBooks(books.data);
-
+        const categories = await api.get('categories');
         const storedBooks = localStorage.getItem('storedBooks');
-        if (storedBooks) {
-            setStoredBooks(JSON.parse(storedBooks));
-        }
+
+        setState({
+            ...state,
+            books: books.data,
+            categories: categories.data,
+            storedBooks: storedBooks ? JSON.parse(storedBooks) : state.storedBooks,
+            loading: false,
+        });
     }
 
     function handleReservation() {
-        if (storedBooks.length) {
-            localStorage.setItem('storedBooks', JSON.stringify(storedBooks));
+        if (state.storedBooks.length) {
+            localStorage.setItem('storedBooks', JSON.stringify(state.storedBooks));
             return history.push('/cart');
         }
 
         alert('Nenhum livro foi selecionado');
     }
 
-    const isStored = bookId => storedBooks.find(x => x.id == bookId);
+    async function handleChangeCategory(e) {
+        const categoryId = e.target.value;
+        const endpoint = categoryId === "0" ? '' : `categories/${categoryId}`;
+
+        const books = await api.get(`books/${endpoint}`);
+        setState({
+            ...state,
+            books: books.data,
+            selectedCategory: categoryId,
+        });
+    }
+
+    const isStored = bookId => state.storedBooks.find(x => x.id == bookId);
 
     function handleClear() {
         localStorage.removeItem('storedBooks');
-        setStoredBooks([]);
+        setState({ ...state, storedBooks: [] });
     }
+
+    if (state.loading)
+        return (<div></div>);
 
     return (
         <div className="books-container">
-            <h1>Livros</h1>
+            <Header />
+            <h1>Escolha os livros para sua reserva</h1>
+            <div className="filter">
+                <div className="custom-select">
+                    <select value={state.selectedCategory} onChange={handleChangeCategory}>
+                        <option value="0">Todos</option>
+                        {state.categories.map(x => (
+                            <option key={x.id} value={x.id}>{x.name}</option>
+                        ))}
+                    </select>
+                </div>
+            </div>
             <ul>
-                {books.map(book => (
+                {state.books.map(book => (
                     <li key={book.id}>
                         <img src={`../../../images/books/thumbs/${book.thumbnail}`} alt={book.name} />
                         <div>
                             <div className="title">Título: {book.name}</div>
-                            <p><strong>Autor:</strong>{book.author}</p>
-                            <p><strong>Gênero:</strong>{book.categoryName}</p>
-                            <button onClick={() => handleAddBook(book)} type="button">
-                                {isStored(book.id) ? 'remover' : 'adicionar'}
+                            <p><strong>Autor: </strong>{book.author}</p>
+                            <p><strong>Gênero: </strong>{book.categoryName}</p>
+                            <button className={classNames({ stored: isStored(book.id) })} onClick={() => handleAddBook(book)} type="button">
+                                <FiShoppingCart size={16} color="#FFFFFF" />
+                                <span>{isStored(book.id) ? 'Remover' : 'Adicionar'}</span>
                             </button>
                         </div>
                     </li>
                 ))}
             </ul>
-            <button onClick={() => handleClear()} type="button" className="btnSave">
-                Limpar
-            </button>
-            <button onClick={() => handleReservation()} type="button" className="btnSave">
-                Reservar
-            </button>
+            <div className="button-area">
+                <button disabled={!state.storedBooks.length} onClick={() => handleReservation()} type="button" className="btnSave">Reservar</button>
+                <button disabled={!state.storedBooks.length} onClick={() => handleClear()} type="button" className="btnClear">Limpar</button>
+            </div>
         </div >
     );
 }

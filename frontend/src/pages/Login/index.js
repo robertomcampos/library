@@ -1,29 +1,36 @@
 import React, { useState } from 'react';
 import { FiLogIn } from 'react-icons/fi'
 import { Link, useHistory } from 'react-router-dom';
+import { useLocation } from 'react-router';
 
 import api from '../../services/api'
 
 import './styles.scss';
 
-import heroesImg from '../../assets/heroes.png';
-import logo from '../../assets/logo.svg';
-
 export default function Login() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+
+    const initialState = {
+        email: '',
+        password: '',
+        location: useLocation()
+    }
+
+    const [state, setState] = useState(initialState);
     const history = useHistory();
 
     function handleLogin(e) {
         e.preventDefault();
 
         api.post('authenticate', {
-            email,
-            password,
+            email: state.email,
+            password: state.password,
         }).then(result => {
-            console.log(result);
             localStorage.setItem('loggedUser', JSON.stringify(result.data));
-            history.push('/cart');
+
+            const redirect = state.location.state && state.location.state.from
+                && state.location.state.from.pathname;
+
+            history.push(redirect || '/');
         }).catch(e => { console.log(e) });
     }
 
@@ -34,18 +41,20 @@ export default function Login() {
                     <h1>Faça seu login</h1>
                     <input
                         placeholder="Email"
-                        value={email}
-                        onChange={e => setEmail(e.target.value)}
+                        value={state.email}
+                        onChange={e => setState({ ...state, email: e.target.value })}
                     />
                     <input
                         placeholder="Senha"
-                        value={password}
+                        value={state.password}
                         type="password"
-                        onChange={e => setPassword(e.target.value)}
+                        onChange={e => setState({ ...state, password: e.target.value })}
                     />
-                    <button className="button" type="submit">Entrar</button>
+                    <div className="button-area">
+                        <button className="button" type="submit">Entrar</button>
+                    </div>
                     <Link className="back-link" to="/register">
-                        <FiLogIn size={16} color="#3D94F6" />
+                        <FiLogIn size={16} color="#41414d" />
                         Criar nova conta
                     </Link>
                 </form>

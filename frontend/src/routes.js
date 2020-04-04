@@ -6,6 +6,7 @@ import Register from './pages/Register';
 import Cart from './pages/Cart';
 import Landing from './pages/Landing';
 import Protocol from './pages/Protocol';
+
 import isAuthenticated from './services/isAuthenticated';
 
 export default function Routes() {
@@ -29,7 +30,7 @@ function PrivateRoute({ children, ...props }) {
         <Route
             {...props}
             render={({ location }) =>
-                isAuthenticated() ? (
+                isAuthenticated() || location.pathname === '/login' ? (
                     children
                 ) : (
                         <Redirect

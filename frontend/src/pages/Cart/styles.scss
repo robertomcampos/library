@@ -1,0 +1,32 @@
+.cart-container {
+    width: 100%;
+    max-width: 1180px;
+    padding: 0 30px;
+    margin: 32px auto;
+
+    ul {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        grid-gap: 24px;
+        list-style: none;
+        margin-top: 20px;
+
+        li {
+            background: #FFF;
+            padding: 24px;
+            position: relative;
+            display: flex;
+            box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 5px;
+
+            img {
+                width: 70px;
+                height: 100px;
+                margin-right: 10px;
+            }
+
+            p {
+                margin-top: 5px;
+            }
+        }
+    }
+}

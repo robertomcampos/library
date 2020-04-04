@@ -3,35 +3,34 @@ import { Link, useHistory } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi'
 
 import api from '../../services/api'
-import './styles.css';
-
-import logo from '../../assets/logo.svg';
+import './styles.scss';
 
 export default function Register() {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [whatsapp, setWhatsapp] = useState('');
-    const [city, setCity] = useState('');
-    const [uf, setUf] = useState('');
+
+    const initialState = {
+        name: '',
+        email: '',
+        password: ''
+    }
+
+    const [state, setState] = useState(initialState);
 
     const history = useHistory();
 
     async function handleRegister(e) {
         e.preventDefault();
+
         const data = {
-            name,
-            email,
-            whatsapp,
-            city,
-            uf
+            name: state.name,
+            email: state.email,
+            password: state.password
         };
 
         try {
-            const response = await api.post('ongs', data);
+            const result = await api.post('users', data);
 
-            alert(`Seu ID de acesso ${response.data.id}`);
-
-            history.push('/');
+            localStorage.setItem('loggedUser', JSON.stringify(result.data));
+            history.push('/cart');
         } catch (err) {
             alert('erro no cadastro, tente novamente.')
         }
@@ -41,37 +40,29 @@ export default function Register() {
         <div className="register-container">
             <div className="content">
                 <section>
-                    <img src={logo} alt="Be the hero" />
-
                     <h1>Cadastro</h1>
-                    <p>Faça seu cadastro, entre na plataforma e ajude pessoas a encontrarem os casos da sua ONG.</p>
-                    <Link className="back-link" to="/">
-                        <FiArrowLeft size={16} color="#E02041" />
+                    <p>Faça seu cadastro, e aproveite nosso catálogo de livros.</p>
+                    <Link className="back-link" to="/login">
+                        <FiArrowLeft size={16} color="#41414d" />
                         Já tenho cadastro
                     </Link>
                 </section>
                 <form onSubmit={handleRegister}>
                     <input
-                        placeholder="Nome da Ong"
-                        value={name}
-                        onChange={e => setName(e.target.value)} />
-                    <input type="Email" placeholder="email"
-                        value={email}
-                        onChange={e => setEmail(e.target.value)} />
-                    <input placeholder="Whatsapp"
-                        value={whatsapp}
-                        onChange={e => setWhatsapp(e.target.value)} />
-                    <div className="input-group">
-                        <input placeholder="Cidade"
-                            value={city}
-                            onChange={e => setCity(e.target.value)} />
-                        <input placeholder="UF"
-                            value={uf}
-                            onChange={e => setUf(e.target.value)} style={{ width: 80 }} />
+                        placeholder="Nome"
+                        value={state.name}
+                        onChange={e => setState({ ...state, name: e.target.value })} />
+                    <input type="Email" placeholder="Email"
+                        value={state.email}
+                        onChange={e => setState({ ...state, email: e.target.value })} />
+                    <input placeholder="Senha"
+                        value={state.password}
+                        onChange={e => setState({ ...state, password: e.target.value })} />
+                    <div className="button-area">
+                        <button className="button" type="submit">
+                            Cadastrar
+                        </button>
                     </div>
-                    <button className="button" type="submit">
-                        Cadastrar
-                    </button>
                 </form>
             </div>
         </div>

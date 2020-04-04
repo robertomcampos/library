@@ -3,7 +3,7 @@ const crypto = require('crypto');
 
 module.exports = {
     async create(request, response) {
-        const { 
+        const {
             startsOn,
             endsOn,
             books,
@@ -16,8 +16,8 @@ module.exports = {
         const [reservationId] = await connection('reservations')
             .returning('id')
             .insert({
-                startsOn,
-                endsOn,
+                startsOn: '2014-01-01T23:28:56.782Z',
+                endsOn: '2014-01-01T23:28:56.782Z',
                 user_id: user,
                 protocol,
             });
