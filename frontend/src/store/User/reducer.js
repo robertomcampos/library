@@ -1,7 +1,6 @@
-import BooksTypes from "./types";
+import UserTypes from "./types";
 
 const INITIAL_STATE = {
-    data: [],
     loading: false,
     hasError: false,
     message: '',
@@ -9,19 +8,19 @@ const INITIAL_STATE = {
 
 const reducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
-        case BooksTypes.GET_BOOKS:
+        case UserTypes.CREATE_USER:
             return {
                 ...state,
                 loading: true,
             }
-        case BooksTypes.GET_BOOKS_FAILURE:
+        case UserTypes.CREATE_USER_FAILURE:
             return {
                 ...state,
                 loading: false,
                 hasError: true,
                 message: action.payload,
             }
-        case BooksTypes.GET_BOOKS_SUCCESS:
+        case UserTypes.CREATE_USER_SUCCESS:
             return {
                 ...state,
                 loading: false,

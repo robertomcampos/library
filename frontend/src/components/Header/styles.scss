@@ -8,5 +8,16 @@
         border-radius: 15px;
         font-family: Arial;
         text-shadow: none;
+        margin-left: 10px;
+    }
+
+    .cart {
+        display: inline-block;
+        text-align: center;
+
+        .count {
+            text-align: center;
+            font-size: 0.8em;
+        }
     }
 }

@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FiLogIn } from 'react-icons/fi'
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useLocation } from "react-router";
 import moment from 'moment';
-import queryString from 'query-string'
-
 
 import './styles.scss';
 
 export default function Protocol() {
 
-    const [reservation, setReservatio] = useState(useLocation().state);
+    const [reservation] = useState(useLocation().state);
 
     return (
         <div className="protocol-container">
@@ -24,7 +22,6 @@ export default function Protocol() {
                         Fazer nova reserva
                     </Link>
             </section>
-
         </div >
     );
 }

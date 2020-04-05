@@ -1,6 +1,7 @@
 const connection = require('../database/connection');
 
 module.exports = {
+    // dummy authentication
     async authenticate(request, response) {
 
         const { email, password } = request.body;
@@ -10,7 +11,6 @@ module.exports = {
             .andWhere('password', password);
             
         if (!user) {
-            // todo: não consigo capturar o erro no front
             return response.status(400).json({ error: 'O usuário ou a senha estão incorretos.' });
         }
 

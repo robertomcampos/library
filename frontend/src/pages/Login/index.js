@@ -1,37 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FiLogIn } from 'react-icons/fi'
 import { Link, useHistory } from 'react-router-dom';
 import { useLocation } from 'react-router';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAuthenticatedUser } from '../../store/Authentication/actions';
 
-import api from '../../services/api'
+import { setLoggedUser } from '../../services/managerUser';
 
 import './styles.scss';
 
 export default function Login() {
 
-    const initialState = {
-        email: '',
-        password: '',
-        location: useLocation()
-    }
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [location] = useState(useLocation());
 
-    const [state, setState] = useState(initialState);
+    const { data: user } = useSelector(state => state.authentication);
+
     const history = useHistory();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (user) {
+            successLogin();
+        }
+    }, [user]);
 
     function handleLogin(e) {
         e.preventDefault();
 
-        api.post('authenticate', {
-            email: state.email,
-            password: state.password,
-        }).then(result => {
-            localStorage.setItem('loggedUser', JSON.stringify(result.data));
+        dispatch(getAuthenticatedUser({
+            email,
+            password,
+        }));
+    }
 
-            const redirect = state.location.state && state.location.state.from
-                && state.location.state.from.pathname;
-
-            history.push(redirect || '/');
-        }).catch(e => { console.log(e) });
+    function successLogin() {
+        setLoggedUser(user);
+        const redirect = location.state && location.state.from
+            && location.state.from.pathname;
+        history.push(redirect || '/');
     }
 
     return (
@@ -41,14 +49,14 @@ export default function Login() {
                     <h1>Faça seu login</h1>
                     <input
                         placeholder="Email"
-                        value={state.email}
-                        onChange={e => setState({ ...state, email: e.target.value })}
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
                     />
                     <input
                         placeholder="Senha"
-                        value={state.password}
+                        value={password}
                         type="password"
-                        onChange={e => setState({ ...state, password: e.target.value })}
+                        onChange={e => setPassword(e.target.value)}
                     />
                     <div className="button-area">
                         <button className="primary button" type="submit">Entrar</button>

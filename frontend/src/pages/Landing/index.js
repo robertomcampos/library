@@ -3,66 +3,64 @@ import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
 import { FiShoppingCart } from 'react-icons/fi'
 import { useHistory } from 'react-router-dom';
-import Header from '../Header';
-
-import api from '../../services/api'
-import { setStoredBooks as setStoredBooksService, getStoredBooks } from '../../services/manageStoredBooks';
+import Header from '../../components/Header';
+import Loading from '../../components/Loading';
 
 import './styles.scss';
-import { getBooks } from '../../store/Books/actions';
+import { getBooks, getBooksByCategory } from '../../store/Books/actions';
+import { getCategories } from '../../store/Categories/actions';
+import { addStoredBooks, clearStoredBooks } from '../../store/StoredBooks/actions';
 
 export default function Landing() {
 
-    const [categories, setCategories] = useState([]);
-    const [storedBooks, setStoredBooks] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(0);
     const [pageLoading, setPageLoading] = useState(true);
 
+    const { data: books } = useSelector(state => state.books);
+    const { data: categories } = useSelector(state => state.categories);
+    const { data: storedBooks } = useSelector(state => state.storedBooks);
+
     const history = useHistory();
-
     const dispatch = useDispatch();
-
-    const { data: books, loading } = useSelector(state => state.books);
 
     useEffect(() => {
         fetchData();
     }, [])
 
-    function handleAddBook(book) {
-        let _storedBooks;
-        if (!storedBooks.includes(book)) {
-            _storedBooks = [...storedBooks, book];
-            setStoredBooksService(_storedBooks);
-            return setStoredBooks(_storedBooks);
-        }
-        _storedBooks = storedBooks.filter(x => x !== book)
-        setStoredBooksService(_storedBooks);
-        return setStoredBooks(_storedBooks);
-    }
-
     useEffect(() => {
         if (books.length) {
-            api.get('categories').then(result => {
-                setCategories(result.data);
-                const storedBooks = getStoredBooks();
-                setStoredBooks(storedBooks || []);
-                setPageLoading(false);
-            });
+            setPageLoading(false);
         }
-    }, [books]);
+    }, [books, categories]);
 
-    async function fetchData() {
+    useEffect(() => {
+        if (storedBooks) {
+
+        }
+    }, [storedBooks])
+
+    const isStored = bookId => storedBooks.find(x => x.id == bookId);
+
+    function handleStoredBooks(book) {
+        if (!storedBooks.includes(book)){
+            return addBook(book)
+        }
+        removeStoredBook(book);
+    }
+
+    function fetchData() {
         dispatch(getBooks());
-        /* const categories = await api.get('categories');
-        const storedBooks = getStoredBooks();
+        dispatch(getCategories());
+    }
 
-        setState({
-            ...state,
-            books: books.data,
-            categories: categories.data,
-            storedBooks: storedBooks || state.storedBooks,
-            loading: false,
-        }); */
+    function addBook(book) {
+        const booksToStore = [...storedBooks, book];
+        dispatch(addStoredBooks(booksToStore));
+    }
+
+    function removeStoredBook(book) {
+        const booksToRemove = storedBooks.filter(x => x !== book);
+        dispatch(addStoredBooks(booksToRemove));
     }
 
     function handleReservation() {
@@ -73,28 +71,18 @@ export default function Landing() {
         alert('Nenhum livro foi selecionado');
     }
 
-    async function handleChangeCategory(e) {
+    function handleChangeCategory(e) {
         const categoryId = e.target.value;
-        const endpoint = categoryId === "0" ? '' : `categories/${categoryId}`;
-
-        const books = await api.get(`books/${endpoint}`);
         setSelectedCategory(categoryId);
-        /* setState({
-            ...state,
-            books: books.data,
-            selectedCategory: categoryId,
-        }); */
+        categoryId === "0" ? dispatch(getBooks()) : dispatch(getBooksByCategory(categoryId));
     }
 
-    const isStored = bookId => storedBooks.find(x => x.id == bookId);
-
     function handleClear() {
-        localStorage.removeItem('storedBooks');
-        setStoredBooks([]);
+        dispatch(clearStoredBooks());
     }
 
     if (pageLoading)
-        return (<div></div>);
+        return (<Loading />);
 
     return (
         <div className="books-container">
@@ -118,7 +106,7 @@ export default function Landing() {
                             <div className="title">Título: {book.name}</div>
                             <p><strong>Autor: </strong>{book.author}</p>
                             <p><strong>Gênero: </strong>{book.categoryName}</p>
-                            <button className={classNames('primary', { secundary: isStored(book.id) })} onClick={() => handleAddBook(book)} type="button">
+                            <button className={classNames('primary', { secundary: isStored(book.id) })} onClick={() => handleStoredBooks(book)} type="button">
                                 <FiShoppingCart size={16} color="#FFFFFF" />
                                 <span>{isStored(book.id) ? 'Remover' : 'Adicionar'}</span>
                             </button>
