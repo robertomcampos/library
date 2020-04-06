@@ -1,6 +1,6 @@
 import api from "../../services/api";
 import { createUserFailure, createUserSuccess, clearError } from "./actions";
-import { put, call,   } from 'redux-saga/effects';
+import { put, call } from 'redux-saga/effects';
 
 export function* createUser(action) {
     const { data } = action.params;

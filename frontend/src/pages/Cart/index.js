@@ -34,7 +34,6 @@ export default function Cart() {
             alert('O carrinho está vazio');
             history.push('/');
         }
-
         fetchData();
     }, [])
 
@@ -96,7 +95,12 @@ export default function Cart() {
                 </div>
                 <div className="input">
                     <strong>Data de devolução</strong>
-                    <DatePicker locale="br" selected={endDate} onChange={date => setEndDate(date)} />
+                    <DatePicker
+                        locale="br"
+                        selected={endDate}
+                        minDate={moment().add(1, 'days').toDate()}
+                        onChange={date => setEndDate(date)}
+                    />
                 </div>
             </div>
             <ul>
@@ -118,7 +122,7 @@ export default function Cart() {
                 <button onClick={() => history.push('/')} type="button" className="primary btnSave">
                     Adicionar Livros
             </button>
-                <button onClick={() => handleConfirm()} type="button" className="primary btnSave">
+                <button onClick={handleConfirm} type="button" className="primary btnSave">
                     Confirmar Reserva
             </button>
             </div>

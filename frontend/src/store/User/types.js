@@ -3,6 +3,7 @@ const UserTypes = {
     CREATE_USER_SUCCESS: '@user/CREATE_USER_SUCCESS', 
     CREATE_USER_FAILURE: '@user/CREATE_USER_FAILURE', 
     CLEAR_ERROR: '@user/CLEAR_ERROR', 
+    CLEAR: '@user/CLEAR', 
 }
 
 export default UserTypes;

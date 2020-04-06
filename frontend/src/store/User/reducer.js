@@ -32,6 +32,8 @@ const reducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 hasError: false,
             }
+        case UserTypes.CLEAR:
+            return INITIAL_STATE;
         default:
             return state;
     }

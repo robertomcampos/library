@@ -3,7 +3,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi'
 import { useDispatch, useSelector } from 'react-redux';
 import { setLoggedUser } from '../../services/managerUser';
-import { createUser } from '../../store/User/actions';
+import { createUser, clear } from '../../store/User/actions';
 
 import './styles.scss';
 
@@ -26,10 +26,16 @@ export default function Register() {
     }, [user]);
 
     useEffect(() => {
+        return () => {
+            dispatch(clear());
+        }
+    }, [])
+
+    useEffect(() => {
         if (hasError) {
             alert(message);
         }
-    }, [hasError]);
+    }, [hasError, message]);
 
     async function handleRegister(e) {
         e.preventDefault();

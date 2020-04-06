@@ -17,7 +17,7 @@ export default function Landing() {
     const [selectedCategory, setSelectedCategory] = useState(0);
     const [pageLoading, setPageLoading] = useState(true);
 
-    const { content: books, page: page, total, limit } = useSelector(state => state.books.data);
+    const { content: books, page, total, limit } = useSelector(state => state.books.data);
     const { data: categories } = useSelector(state => state.categories);
     const { data: storedBooks } = useSelector(state => state.storedBooks);
 
@@ -34,7 +34,7 @@ export default function Landing() {
         }
     }, [books, categories]);
 
-    const isStored = bookId => storedBooks.find(x => x.id == bookId);
+    const isStored = bookId => storedBooks.find(x => x.id === bookId);
 
     function handleStoredBooks(book) {
         if (!storedBooks.find(x => x.id === book.id)) {
