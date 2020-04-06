@@ -33,12 +33,6 @@ export default function Landing() {
         }
     }, [books, categories]);
 
-    useEffect(() => {
-        if (storedBooks) {
-
-        }
-    }, [storedBooks])
-
     const isStored = bookId => storedBooks.find(x => x.id == bookId);
 
     function handleStoredBooks(book) {

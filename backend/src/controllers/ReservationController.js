@@ -1,5 +1,6 @@
 const connection = require('../database/connection');
 const crypto = require('crypto');
+const { celebrate, Segments, Joi } = require('celebrate');
 
 module.exports = {
     async create(request, response) {
@@ -27,5 +28,14 @@ module.exports = {
         await connection('reservations_books').insert(booksToReserv);
 
         return response.json({ ...data, id: reservation_id });
+    },
+    createValidations() {
+        return celebrate({
+            [Segments.BODY]: Joi.object().keys({
+                startsOn: Joi.date().required(),
+                endsOn: Joi.date().required(),
+                books: Joi.array().required()
+            }),
+        })
     }
 }

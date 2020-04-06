@@ -1,4 +1,5 @@
 const connection = require('../database/connection');
+const { celebrate, Segments, Joi } = require('celebrate');
 
 module.exports = {
     // dummy authentication
@@ -16,4 +17,12 @@ module.exports = {
 
         return response.json(user);
     },
+    authenticateValidations() {
+        return celebrate({
+            [Segments.BODY]: Joi.object().keys({
+                email: Joi.string().required().email(),
+                password: Joi.string().required(),
+            })
+        })
+    }
 }
