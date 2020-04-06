@@ -1,4 +1,5 @@
 export function getLoggedUser() {
+    console.log(localStorage.getItem('loggedUser'));
     return localStorage.getItem('loggedUser') ? JSON.parse(localStorage.getItem('loggedUser')) : undefined;
 }
 

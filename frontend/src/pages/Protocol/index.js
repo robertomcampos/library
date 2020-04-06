@@ -3,6 +3,7 @@ import { FiLogIn } from 'react-icons/fi'
 import { Link } from 'react-router-dom';
 import { useLocation } from "react-router";
 import moment from 'moment';
+import Header from '../../components/Header';
 
 import './styles.scss';
 
@@ -12,6 +13,7 @@ export default function Protocol() {
 
     return (
         <div className="protocol-container">
+            <Header />
             <section>
                 <h1>Sua reserva foi efetuada com sucesso</h1>
                 <strong>Data da reserva </strong>{moment(reservation.startsOn).format('DD/MM/YYYY')}

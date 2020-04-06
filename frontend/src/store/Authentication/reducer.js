@@ -18,7 +18,7 @@ const reducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 loading: false,
                 hasError: true,
-                message: action.payload,
+                message: action.payload.response.data.message,
             }
         case AuthenticationTypes.GET_AUTHENTICATED_USER_SUCCESS:
             return {
@@ -27,9 +27,16 @@ const reducer = (state = INITIAL_STATE, action) => {
                 hasError: false,
                 data: action.payload.data,
             }
+        case AuthenticationTypes.CLEAR_ERROR:
+            return {
+                ...state,
+                hasError: false,
+            }
+        case AuthenticationTypes.CLEAR:
+            return INITIAL_STATE;
         default:
             return state;
     }
-} 
+}
 
 export default reducer;

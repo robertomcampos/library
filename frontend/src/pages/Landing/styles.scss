@@ -4,6 +4,20 @@
     padding: 0 30px;
     margin: 32px auto;
 
+    .show-more {
+        display: table;
+
+        button {
+            background-color: white;
+            color: gray;
+            border: 1px solid gray;
+            font-size: 1em;
+            font-family: Arial;
+            text-shadow: none;
+            margin-top: 10px;
+        }
+    }
+
     h1 {
         font-size: 22px;
     }

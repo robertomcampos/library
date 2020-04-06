@@ -18,8 +18,9 @@ module.exports = {
                 .first();
 
             return response.json(user);
-        } catch (error) {
-            return response.status(400).json({ error: error });
+            
+        } catch {
+            return response.status(400).json({ message: 'Esse email já está em uso. Por favor informe um email válido.' });
         }
     },
     createValidations() {

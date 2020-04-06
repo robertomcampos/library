@@ -1,7 +1,10 @@
 import BooksTypes from "./types";
 
 const INITIAL_STATE = {
-    data: [],
+    data: {
+        content: [],
+        page: 1,
+    },
     loading: false,
     hasError: false,
     message: '',
@@ -23,13 +26,19 @@ const reducer = (state = INITIAL_STATE, action) => {
                 hasError: true,
                 message: action.payload,
             }
+        case BooksTypes.CLEAR_BOOKS:
+            return INITIAL_STATE;
+
         case BooksTypes.GET_BOOKS_SUCCESS:
         case BooksTypes.GET_BOOKS_BY_CATEGORY_SUCCESS:
             return {
                 ...state,
                 loading: false,
                 hasError: false,
-                data: action.payload.data,
+                data: {
+                    ...action.payload.data,
+                    content: [...state.data.content, ...action.payload.data.content],
+                },
             }
         default:
             return state;

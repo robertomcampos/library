@@ -13,7 +13,7 @@ export default function Register() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const { data: user } = useSelector(state => state.user);
+    const { data: user, hasError, message } = useSelector(state => state.user);
 
     const history = useHistory();
     const dispatch = useDispatch();
@@ -24,6 +24,12 @@ export default function Register() {
             history.push('/cart');
         }
     }, [user]);
+
+    useEffect(() => {
+        if (hasError) {
+            alert(message);
+        }
+    }, [hasError]);
 
     async function handleRegister(e) {
         e.preventDefault();

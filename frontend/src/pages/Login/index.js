@@ -3,7 +3,7 @@ import { FiLogIn } from 'react-icons/fi'
 import { Link, useHistory } from 'react-router-dom';
 import { useLocation } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAuthenticatedUser } from '../../store/Authentication/actions';
+import { getAuthenticatedUser, clear } from '../../store/Authentication/actions';
 
 import { setLoggedUser } from '../../services/managerUser';
 
@@ -15,7 +15,7 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [location] = useState(useLocation());
 
-    const { data: user } = useSelector(state => state.authentication);
+    const { data: user, hasError, message } = useSelector(state => state.authentication);
 
     const history = useHistory();
     const dispatch = useDispatch();
@@ -25,6 +25,18 @@ export default function Login() {
             successLogin();
         }
     }, [user]);
+
+    useEffect(() => {
+        return () => {
+            dispatch(clear());
+        }
+    }, [])
+
+    useEffect(() => {
+        if (hasError) {
+            alert(message);
+        }
+    }, [hasError]);
 
     function handleLogin(e) {
         e.preventDefault();

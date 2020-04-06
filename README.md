@@ -1,6 +1,6 @@
 # Livraria
 
-Protótipo de uma livraria para reserva de livros
+Prototipo de uma livraria para reserva de livros
 
 ## Installation
 

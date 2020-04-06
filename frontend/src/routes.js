@@ -29,18 +29,18 @@ function PrivateRoute({ children, ...props }) {
     return (
         <Route
             {...props}
-            render={({ location }) =>
-                getLoggedUser() || location.pathname === '/login' ? (
-                    children
-                ) : (
-                        <Redirect
-                            to={{
-                                pathname: "/login",
-                                state: { from: location }
-                            }}
-                        />
-                    )
-            }
+            render={({ location }) => {
+                if (getLoggedUser()) {
+                    return children;
+                }
+
+                return <Redirect
+                    to={{
+                        pathname: "/login",
+                        state: { from: location }
+                    }}
+                />
+            }}
         />
     );
 }

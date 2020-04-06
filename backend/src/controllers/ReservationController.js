@@ -21,13 +21,18 @@ module.exports = {
             protocol,
         }
 
-        const [reservation_id] = await connection('reservations').insert(data);
+        try {
+            const [reservation_id] = await connection('reservations').insert(data);
 
-        const booksToReserv = books.map(id => ({ book_id: id, reservation_id: reservation_id }));
+            const booksToReserv = books.map(id => ({ book_id: id, reservation_id: reservation_id }));
 
-        await connection('reservations_books').insert(booksToReserv);
+            await connection('reservations_books').insert(booksToReserv);
 
-        return response.json({ ...data, id: reservation_id });
+            return response.json({ ...data, id: reservation_id });
+
+        } catch (error) {
+            return response.status(400).json({ message: error });
+        }
     },
     createValidations() {
         return celebrate({

@@ -7,15 +7,20 @@ module.exports = {
 
         const { email, password } = request.body;
 
-        const [user] = await connection('users')
-            .where('email', email)
-            .andWhere('password', password);
-            
-        if (!user) {
-            return response.status(400).json({ error: 'O usuário ou a senha estão incorretos.' });
-        }
+        try {
+            const [user] = await connection('users')
+                .where('email', email)
+                .andWhere('password', password);
 
-        return response.json(user);
+            if (!user) {
+                return response.status(400).json({ message: 'O usuário ou a senha estão incorretos.' });
+            }
+
+            return response.json(user);
+            
+        } catch (error) {
+            return response.status(400).json({ message: error });
+        }
     },
     authenticateValidations() {
         return celebrate({

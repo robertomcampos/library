@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { getLoggedUser } from '../../services/managerUser';
 import { FiShoppingCart } from 'react-icons/fi'
+import { clearLoggedUser } from '../../services/managerUser'
 
 import './styles.scss';
 
@@ -19,23 +20,25 @@ export default function Header(props) {
     }, []);
 
     function handleLogout() {
-        localStorage.clear();
+        clearLoggedUser();
         setUserName('');
         history.push('/');
     }
 
     return (
         <div className="header-container">
-            {userName &&
-                <header>
-                    <span>Olá, {userName}.</span>
-                    <div className="cart">
-                        <div className="count">{storedBooks.length}</div>
-                        <FiShoppingCart size={16} color="#000" />
+            <header>
+                <div className="cart">
+                    <div className="count">{storedBooks.length ? storedBooks.length : ''}</div>
+                    <FiShoppingCart size={16} color="#000" />
+                </div>
+                {userName &&
+                    <div>
+                        <span>Olá, {userName}.</span>
+                        <button className="btnLogout" onClick={handleLogout} type="button">Sair</button>
                     </div>
-                    <button className="btnLogout" onClick={handleLogout} type="button">Sair</button>
-                </header>
-            }
+                }
+            </header>
             {props.children}
         </div>
     );

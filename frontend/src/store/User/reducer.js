@@ -18,7 +18,7 @@ const reducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 loading: false,
                 hasError: true,
-                message: action.payload,
+                message: action.payload.response.data.message,
             }
         case UserTypes.CREATE_USER_SUCCESS:
             return {
@@ -27,9 +27,14 @@ const reducer = (state = INITIAL_STATE, action) => {
                 hasError: false,
                 data: action.payload.data,
             }
+        case UserTypes.CLEAR_ERROR:
+            return {
+                ...state,
+                hasError: false,
+            }
         default:
             return state;
     }
-} 
+}
 
 export default reducer;
