@@ -61,6 +61,50 @@ exports.seed = function (knex) {
           thumbnail: 'apocalipse.jpg',
           category_id: 1
         },
+        
+        {
+          id: 9,
+          name: 'O Rei do Inverno',
+          author: 'Bernard Cornwell',
+          thumbnail: 'reidoinverno-romance.jpg',
+          category_id: 4
+        },
+        
+        {
+          id: 10,
+          name: 'O destino das Terras Altas',
+          author: 'Hannah Howell',
+          thumbnail: 'odestino-romance.jpg',
+          category_id: 4
+        },
+        {
+          id: 11,
+          name: 'Um romance durante V cruzada',
+          author: 'Cláudia Ruiz Hespanha',
+          thumbnail: 'quintacruzada-romance.jpg',
+          category_id: 4
+        },
+        {
+          id: 12,
+          name: 'Um renascer de uma lenda',
+          author: 'Pandora L',
+          thumbnail: 'renascer-romance.jpg',
+          category_id: 4
+        },
+        {
+          id: 13,
+          name: 'Dom Casmurro',
+          author: 'Machado de Assis',
+          thumbnail: 'dom-romance.jpg',
+          category_id: 4
+        },
+        {
+          id: 14,
+          name: 'O Cógido Da Vinci',
+          author: 'Dan Brown',
+          thumbnail: 'davinci-romance.jpg',
+          category_id: 4
+        },
       ]);
     });
 };

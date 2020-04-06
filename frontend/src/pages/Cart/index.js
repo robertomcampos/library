@@ -6,6 +6,8 @@ import DatePicker, { registerLocale } from "react-datepicker";
 import br from "date-fns/locale/pt-BR";
 import "react-datepicker/dist/react-datepicker.css";
 
+import { IoMdAdd } from 'react-icons/io';
+
 import Header from '../../components/Header';
 import Loading from '../../components/Loading';
 import { getLoggedUser } from '../../services/managerUser'
@@ -120,6 +122,7 @@ export default function Cart() {
             </ul>
             <div className="button-area">
                 <button onClick={() => history.push('/')} type="button" className="primary btnSave">
+                    <IoMdAdd size={20} className="add-icon" color="#FFF" />
                     Adicionar Livros
             </button>
                 <button onClick={handleConfirm} type="button" className="primary btnSave">

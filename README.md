@@ -1,21 +1,15 @@
 # Livraria
 
-Prototipo de uma livraria para reserva de livros
+Reserva de Livros
 
-## Installation
+## Instalação e Execução
 
-Setup:
-pasta backend:
+cd /backend
 - npm i
 - npx knex migrate:latest
 - npx knex seed:run
+- npm start 
 
-pasta frontend:
+cd /frontend
 - npm i
-
-Uso:
-pasta backend: 
-- npm start
-
-pasta frontend: 
 - npm start
