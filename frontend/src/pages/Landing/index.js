@@ -79,7 +79,7 @@ export default function Landing() {
     }
 
     function handlePagination() {
-        if (selectedCategory) {
+        if (selectedCategory && selectedCategory !== "0") {
             return dispatch(getBooksByCategory(selectedCategory, page + 1));
         }
         dispatch(getBooks(page + 1));
